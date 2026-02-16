@@ -1,0 +1,293 @@
+{
+  "endpoints": [
+    {
+      "endpoint": "POST /ai/doubt-hint",
+      "requests": [
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "question": "What is a closure in JavaScript?"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "hint": "Think about scope - where variables are accessible. When a function is defined inside another function, it has access to the outer function's variables. This relationship persists even after the outer function has finished executing."
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "question": "How do I implement a binary search algorithm?"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "hint": "Think about dividing the problem in half each time. Consider: what happens if you check the middle element? If it's too small, where do you search next?"
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "question": "What is closure?"
+            }
+          },
+          "response": {
+            "status": 401,
+            "body": {
+              "success": false,
+              "message": "Authorization header missing or invalid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "POST /ai/doubt-answer",
+      "requests": [
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "question": "How does the event loop work in JavaScript?",
+              "description": "I understand callbacks but confused about how JavaScript handles async operations"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "answer": "The event loop is the heart of JavaScript's asynchronous execution model. Here's how it works:\n\n1. **Call Stack**: Synchronous code executes on the call stack, one operation at a time.\n\n2. **Web APIs**: When you encounter async operations (setTimeout, fetch, etc.), they're handed to the browser's Web APIs, which run in the background.\n\n3. **Callback Queue**: Once the Web API completes its work, the callback is placed in the callback queue.\n\n4. **Event Loop**: The event loop constantly checks if the call stack is empty. When it is, it takes the first callback from the callback queue and pushes it to the call stack.\n\nExample:\nconsole.log('Start');\nsetTimeout(() => console.log('Inside timeout'), 1000);\nconsole.log('End');\n\nOutput: Start, End, Inside timeout (after 1 second)"
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "question": "What is the difference between Promise and async/await?",
+              "description": "Know about promises but confused about async/await syntax"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "answer": "Promises and async/await are both ways to handle asynchronous operations:\n\n**Promises:**\n- Use .then() and .catch() for handling states\n- More verbose but explicit\n\n**Async/Await:**\n- Syntactic sugar on top of Promises\n- Looks like synchronous code\n- Easier to read and understand\n\nUnder the hood, async/await is just Promises with better syntax!"
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "question": "Explain the MVC architecture pattern"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "answer": "The MVC (Model-View-Controller) architecture separates an application into three components:\n\n1. **Model**: Manages data and business logic\n2. **View**: Presentation layer that displays data\n3. **Controller**: Handles user input and updates Model\n\nFlow: User interacts with View → View sends input to Controller → Controller updates Model → Model notifies View → View displays new data"
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "description": "Some context here"
+            }
+          },
+          "response": {
+            "status": 400,
+            "body": {
+              "success": false,
+              "message": "Question field is required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "POST /ai/tags",
+      "requests": [
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "text": "This tutorial covers React hooks, functional components, state management with Redux, and best practices for building scalable web applications"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "tags": ["React", "Hooks", "State Management", "Redux", "Web Development"]
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "text": "Learn about MongoDB aggregation pipeline, data modeling strategies, performance optimization techniques, and indexing best practices"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "tags": ["MongoDB", "Data Modeling", "Performance Optimization", "Indexing", "Aggregation"]
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "text": "Understanding neural networks, deep learning algorithms, TensorFlow implementation, and computer vision applications"
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "tags": ["Neural Networks", "Deep Learning", "TensorFlow", "Computer Vision", "AI"]
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {}
+          },
+          "response": {
+            "status": 400,
+            "body": {
+              "success": false,
+              "message": "Text field is required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "POST /ai/blog-summary",
+      "requests": [
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "content": "React is a JavaScript library for building user interfaces with reusable components. Each component manages its own state and can be composed to build complex UIs. React uses a virtual DOM to efficiently update only the parts of the UI that have changed, making it fast and performant. The component lifecycle provides hooks at various stages of a component's existence, allowing developers to execute code at specific times. Today, React is one of the most popular frontend frameworks with a large ecosystem of tools and libraries built around it."
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "summary": "React is a JavaScript library for building reusable UI components that efficiently update through a virtual DOM. It provides lifecycle hooks for managing component behavior and is one of the most popular frameworks with a large ecosystem. React enables developers to create interactive web applications efficiently with component-based architecture."
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "content": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows developers to use JavaScript for server-side programming. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient for building scalable network applications. The npm ecosystem provides thousands of packages that extend Node.js functionality. Popular frameworks like Express, Koa, and Fastify are built on top of Node.js. Companies like Netflix, LinkedIn, and Uber use Node.js in production for their services because of its performance and scalability advantages."
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "summary": "Node.js is a JavaScript runtime on Chrome's V8 engine enabling server-side JavaScript development with non-blocking I/O for scalable applications. The npm ecosystem provides extensive packages and frameworks like Express for rapid development. Major companies including Netflix and LinkedIn use Node.js in production for its performance advantages."
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "content": "MongoDB is a popular NoSQL database that stores data in JSON-like documents. Unlike traditional SQL databases that use tables with fixed schemas, MongoDB offers flexible schema design. MongoDB supports powerful query capabilities including filtering, sorting, and aggregation operations through its aggregation pipeline. The database is designed to scale horizontally through sharding, allowing it to handle large volumes of data across multiple servers."
+            }
+          },
+          "response": {
+            "status": 200,
+            "body": {
+              "success": true,
+              "summary": "MongoDB is a NoSQL database storing data in flexible JSON-like documents with dynamic schema design unlike traditional SQL tables. It offers powerful querying and aggregation capabilities while scaling horizontally through sharding for large data volumes. MongoDB's flexibility and robust features have made it a popular choice for modern web applications."
+            }
+          }
+        },
+        {
+          "request": {
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            },
+            "body": {
+              "content": ""
+            }
+          },
+          "response": {
+            "status": 400,
+            "body": {
+              "success": false,
+              "message": "Content cannot be empty"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

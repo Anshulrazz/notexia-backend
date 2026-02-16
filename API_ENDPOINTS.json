@@ -1,0 +1,1497 @@
+{
+  "baseUrl": "http://localhost:5000/api",
+  "authentication": "JWT token in HTTP-only cookie (automatically set after login/register)",
+  "endpoints": {
+    "AUTH": {
+      "description": "Authentication endpoints",
+      "endpoints": [
+        {
+          "id": "AUTH_001",
+          "method": "POST",
+          "path": "/auth/register",
+          "description": "Register a new user",
+          "authentication": false,
+          "request": {
+            "body": {
+              "name": "string (required)",
+              "email": "string (required)",
+              "password": "string (required)",
+              "college": "string (optional)",
+              "branch": "string (optional)",
+              "year": "number (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "headers": {
+                "Set-Cookie": "token=<jwt_token>; HttpOnly; Secure; SameSite=Strict; Max-Age=604800"
+              },
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "role": "string"
+                }
+              }
+            },
+            "error": {
+              "status": 400,
+              "body": {
+                "success": false,
+                "message": "string"
+              }
+            }
+          }
+        },
+        {
+          "id": "AUTH_002",
+          "method": "POST",
+          "path": "/auth/login",
+          "description": "Login user",
+          "authentication": false,
+          "request": {
+            "body": {
+              "email": "string (required)",
+              "password": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "headers": {
+                "Set-Cookie": "token=<jwt_token>; HttpOnly; Secure; SameSite=Strict; Max-Age=604800"
+              },
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "role": "string"
+                }
+              }
+            },
+            "error": {
+              "status": 401,
+              "body": {
+                "success": false,
+                "message": "Invalid credentials"
+              }
+            }
+          }
+        },
+        {
+          "id": "AUTH_003",
+          "method": "GET",
+          "path": "/auth/me",
+          "description": "Get logged-in user details",
+          "authentication": true,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "avatar": "string",
+                  "college": "string",
+                  "branch": "string",
+                  "year": "number",
+                  "role": "string",
+                  "reputation": "number",
+                  "isVerified": "boolean",
+                  "createdAt": "timestamp",
+                  "updatedAt": "timestamp"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "NOTES": {
+      "description": "Notes/Projects management endpoints",
+      "endpoints": [
+        {
+          "id": "NOTES_001",
+          "method": "POST",
+          "path": "/notes",
+          "description": "Upload a new note or project",
+          "authentication": true,
+          "request": {
+            "headers": {
+              "Content-Type": "multipart/form-data"
+            },
+            "body": {
+              "title": "string (required)",
+              "description": "string (optional)",
+              "subject": "string (optional)",
+              "tags": "string (optional, comma-separated)",
+              "type": "string (required, 'note' or 'project')",
+              "note": "file (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "note": {
+                  "id": "string",
+                  "title": "string",
+                  "description": "string",
+                  "subject": "string",
+                  "tags": ["string"],
+                  "type": "string",
+                  "uploader": "string",
+                  "file": {
+                    "filename": "string",
+                    "path": "string",
+                    "mimetype": "string",
+                    "size": "number"
+                  },
+                  "likes": [],
+                  "comments": [],
+                  "downloads": 0,
+                  "createdAt": "timestamp",
+                  "updatedAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_002",
+          "method": "GET",
+          "path": "/notes",
+          "description": "Get all notes",
+          "authentication": false,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "count": "number",
+                "notes": [
+                  {
+                    "id": "string",
+                    "title": "string",
+                    "description": "string",
+                    "subject": "string",
+                    "tags": ["string"],
+                    "type": "string",
+                    "uploader": {
+                      "name": "string",
+                      "college": "string"
+                    },
+                    "likes": [],
+                    "downloads": "number",
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_003",
+          "method": "GET",
+          "path": "/notes/:id",
+          "description": "Get a specific note by ID",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "note": {
+                  "id": "string",
+                  "title": "string",
+                  "description": "string",
+                  "subject": "string",
+                  "tags": ["string"],
+                  "type": "string",
+                  "uploader": {
+                    "name": "string",
+                    "college": "string"
+                  },
+                  "likes": ["string"],
+                  "comments": [
+                    {
+                      "user": {
+                        "name": "string"
+                      },
+                      "text": "string",
+                      "createdAt": "timestamp"
+                    }
+                  ],
+                  "downloads": "number",
+                  "createdAt": "timestamp"
+                }
+              }
+            },
+            "error": {
+              "status": 404,
+              "body": {
+                "success": false,
+                "message": "Note not found"
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_004",
+          "method": "PUT",
+          "path": "/notes/:id",
+          "description": "Update a note",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "title": "string (optional)",
+              "subject": "string (optional)",
+              "tags": "array or string (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": {
+                  "note": {
+                    "id": "string",
+                    "title": "string",
+                    "subject": "string",
+                    "tags": ["string"],
+                    "updatedAt": "timestamp"
+                  }
+                }
+              }
+            },
+            "error": {
+              "status": 403,
+              "body": {
+                "success": false,
+                "message": "Only author can update note"
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_005",
+          "method": "DELETE",
+          "path": "/notes/:id",
+          "description": "Delete a note",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true
+              }
+            },
+            "error": {
+              "status": 403,
+              "body": {
+                "success": false,
+                "message": "Only author can delete note"
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_006",
+          "method": "POST",
+          "path": "/notes/:id/like",
+          "description": "Like/Unlike a note",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "likes": "number"
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_007",
+          "method": "POST",
+          "path": "/notes/:id/comment",
+          "description": "Add a comment to a note",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "text": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "comments": [
+                  {
+                    "user": "string",
+                    "text": "string",
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "NOTES_008",
+          "method": "POST",
+          "path": "/notes/:id/download",
+          "description": "Increment download count",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "downloads": "number"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BLOGS": {
+      "description": "Blog management endpoints",
+      "endpoints": [
+        {
+          "id": "BLOGS_001",
+          "method": "POST",
+          "path": "/blogs",
+          "description": "Create a new blog",
+          "authentication": true,
+          "request": {
+            "body": {
+              "title": "string (required)",
+              "content": "string (required)",
+              "tags": "string (optional, comma-separated)",
+              "published": "boolean (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "blog": {
+                  "id": "string",
+                  "title": "string",
+                  "content": "string",
+                  "tags": ["string"],
+                  "author": "string",
+                  "published": "boolean",
+                  "likes": [],
+                  "views": 0,
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "BLOGS_002",
+          "method": "GET",
+          "path": "/blogs",
+          "description": "Get all published blogs",
+          "authentication": false,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "count": "number",
+                "blogs": [
+                  {
+                    "id": "string",
+                    "title": "string",
+                    "content": "string",
+                    "tags": ["string"],
+                    "author": {
+                      "name": "string"
+                    },
+                    "likes": ["string"],
+                    "views": "number",
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "BLOGS_003",
+          "method": "GET",
+          "path": "/blogs/:id",
+          "description": "Get a specific blog by ID",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "blog": {
+                  "id": "string",
+                  "title": "string",
+                  "content": "string",
+                  "tags": ["string"],
+                  "author": {
+                    "name": "string"
+                  },
+                  "likes": ["string"],
+                  "views": "number",
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "BLOGS_004",
+          "method": "PUT",
+          "path": "/blogs/:id",
+          "description": "Update a blog",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "title": "string (optional)",
+              "content": "string (optional)",
+              "tags": "array or string (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": {
+                  "blog": {
+                    "id": "string",
+                    "title": "string",
+                    "content": "string",
+                    "tags": ["string"],
+                    "updatedAt": "timestamp"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "BLOGS_005",
+          "method": "DELETE",
+          "path": "/blogs/:id",
+          "description": "Delete a blog",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true
+              }
+            }
+          }
+        },
+        {
+          "id": "BLOGS_006",
+          "method": "POST",
+          "path": "/blogs/:id/like",
+          "description": "Like/Unlike a blog",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "likes": "number"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DOUBTS": {
+      "description": "Doubt/Question management endpoints",
+      "endpoints": [
+        {
+          "id": "DOUBTS_001",
+          "method": "POST",
+          "path": "/doubts",
+          "description": "Create a new doubt/question",
+          "authentication": true,
+          "request": {
+            "body": {
+              "question": "string (required)",
+              "description": "string (optional)",
+              "tags": "string (optional, comma-separated)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "doubt": {
+                  "id": "string",
+                  "question": "string",
+                  "description": "string",
+                  "tags": ["string"],
+                  "author": "string",
+                  "answers": [],
+                  "acceptedAnswer": null,
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_002",
+          "method": "GET",
+          "path": "/doubts",
+          "description": "Get all doubts",
+          "authentication": false,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "count": "number",
+                "doubts": [
+                  {
+                    "id": "string",
+                    "question": "string",
+                    "description": "string",
+                    "tags": ["string"],
+                    "author": {
+                      "name": "string",
+                      "college": "string"
+                    },
+                    "answers": ["string"],
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_003",
+          "method": "GET",
+          "path": "/doubts/:id",
+          "description": "Get a specific doubt by ID",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "doubt": {
+                  "id": "string",
+                  "question": "string",
+                  "description": "string",
+                  "tags": ["string"],
+                  "author": {
+                    "name": "string",
+                    "college": "string"
+                  },
+                  "answers": [
+                    {
+                      "id": "string",
+                      "user": {
+                        "name": "string"
+                      },
+                      "text": "string",
+                      "upvotes": ["string"],
+                      "createdAt": "timestamp"
+                    }
+                  ],
+                  "acceptedAnswer": "string",
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_004",
+          "method": "POST",
+          "path": "/doubts/:id/answer",
+          "description": "Add an answer to a doubt",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "text": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "answers": [
+                  {
+                    "id": "string",
+                    "user": "string",
+                    "text": "string",
+                    "upvotes": [],
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_005",
+          "method": "POST",
+          "path": "/doubts/:doubtId/answer/:answerId/upvote",
+          "description": "Upvote/Remove upvote on an answer",
+          "authentication": true,
+          "request": {
+            "params": {
+              "doubtId": "string (required)",
+              "answerId": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "upvotes": "number"
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_006",
+          "method": "POST",
+          "path": "/doubts/:doubtId/accept/:answerId",
+          "description": "Accept an answer as solution",
+          "authentication": true,
+          "request": {
+            "params": {
+              "doubtId": "string (required)",
+              "answerId": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "acceptedAnswer": "string"
+              }
+            }
+          }
+        },
+        {
+          "id": "DOUBTS_007",
+          "method": "DELETE",
+          "path": "/doubts/:id",
+          "description": "Delete a doubt",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "FORUMS": {
+      "description": "Forum management endpoints",
+      "endpoints": [
+        {
+          "id": "FORUMS_001",
+          "method": "POST",
+          "path": "/forums",
+          "description": "Create a new forum",
+          "authentication": true,
+          "request": {
+            "body": {
+              "name": "string (required)",
+              "description": "string (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "forum": {
+                  "id": "string",
+                  "name": "string",
+                  "description": "string",
+                  "creator": "string",
+                  "members": ["string"],
+                  "threads": [],
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_002",
+          "method": "GET",
+          "path": "/forums",
+          "description": "Get all forums",
+          "authentication": false,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "count": "number",
+                "forums": [
+                  {
+                    "id": "string",
+                    "name": "string",
+                    "description": "string",
+                    "creator": {
+                      "name": "string"
+                    },
+                    "members": [
+                      {
+                        "name": "string"
+                      }
+                    ],
+                    "threads": ["string"],
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_003",
+          "method": "GET",
+          "path": "/forums/:id",
+          "description": "Get a specific forum by ID",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "forum": {
+                  "id": "string",
+                  "name": "string",
+                  "description": "string",
+                  "creator": {
+                    "name": "string"
+                  },
+                  "members": [
+                    {
+                      "name": "string"
+                    }
+                  ],
+                  "threads": [
+                    {
+                      "id": "string",
+                      "title": "string",
+                      "content": "string",
+                      "author": {
+                        "name": "string"
+                      },
+                      "createdAt": "timestamp"
+                    }
+                  ],
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_004",
+          "method": "POST",
+          "path": "/forums/:id/join",
+          "description": "Join a forum",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "membersCount": "number"
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_005",
+          "method": "POST",
+          "path": "/forums/:id/thread",
+          "description": "Create a thread in a forum",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "title": "string (required)",
+              "content": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "threads": [
+                  {
+                    "id": "string",
+                    "title": "string",
+                    "content": "string",
+                    "author": "string",
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_006",
+          "method": "GET",
+          "path": "/forums/:forumId/thread/:threadId",
+          "description": "Get a specific thread",
+          "authentication": false,
+          "request": {
+            "params": {
+              "forumId": "string (required)",
+              "threadId": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "thread": {
+                  "id": "string",
+                  "title": "string",
+                  "content": "string",
+                  "author": {
+                    "name": "string"
+                  },
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "FORUMS_007",
+          "method": "DELETE",
+          "path": "/forums/:id",
+          "description": "Delete a forum",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "USERS": {
+      "description": "User management endpoints",
+      "endpoints": [
+        {
+          "id": "USERS_001",
+          "method": "GET",
+          "path": "/users/:id",
+          "description": "Get user by ID",
+          "authentication": false,
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "avatar": "string",
+                  "college": "string",
+                  "branch": "string",
+                  "year": "number",
+                  "role": "string",
+                  "reputation": "number",
+                  "isVerified": "boolean",
+                  "createdAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "USERS_002",
+          "method": "GET",
+          "path": "/users/me",
+          "description": "Get authenticated user profile",
+          "authentication": true,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "avatar": "string",
+                  "college": "string",
+                  "branch": "string",
+                  "year": "number",
+                  "role": "string",
+                  "reputation": "number",
+                  "isVerified": "boolean",
+                  "createdAt": "timestamp",
+                  "updatedAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "USERS_003",
+          "method": "PUT",
+          "path": "/users/me",
+          "description": "Update user profile",
+          "authentication": true,
+          "request": {
+            "body": {
+              "name": "string (optional)",
+              "college": "string (optional)",
+              "branch": "string (optional)",
+              "year": "number (optional)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "name": "string",
+                  "email": "string",
+                  "college": "string",
+                  "branch": "string",
+                  "year": "number",
+                  "updatedAt": "timestamp"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "USERS_004",
+          "method": "PUT",
+          "path": "/users/me/avatar",
+          "description": "Upload/Update user avatar",
+          "authentication": true,
+          "request": {
+            "headers": {
+              "Content-Type": "multipart/form-data"
+            },
+            "body": {
+              "avatar": "file (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "avatar": "string",
+                "user": {
+                  "id": "string",
+                  "avatar": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "USERS_005",
+          "method": "PUT",
+          "path": "/users/me/password",
+          "description": "Change user password",
+          "authentication": true,
+          "request": {
+            "body": {
+              "currentPassword": "string (required)",
+              "newPassword": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true
+              }
+            },
+            "error": {
+              "status": 401,
+              "body": {
+                "success": false,
+                "message": "Current password is incorrect"
+              }
+            }
+          }
+        },
+        {
+          "id": "USERS_006",
+          "method": "GET",
+          "path": "/users/me/stats",
+          "description": "Get user statistics",
+          "authentication": true,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": {
+                  "notesUploaded": "number",
+                  "doubtsAsked": "number",
+                  "doubtsAnswered": "number",
+                  "blogsWritten": "number",
+                  "forumsJoined": "number"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ADMIN": {
+      "description": "Admin management endpoints (requires admin role)",
+      "endpoints": [
+        {
+          "id": "ADMIN_001",
+          "method": "GET",
+          "path": "/admin/stats",
+          "description": "Get admin dashboard statistics",
+          "authentication": true,
+          "role_required": "admin",
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": {
+                  "totalUsers": "number",
+                  "totalNotes": "number",
+                  "totalBlogs": "number",
+                  "totalDoubts": "number",
+                  "totalForums": "number"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "ADMIN_002",
+          "method": "GET",
+          "path": "/admin/users",
+          "description": "Get all users",
+          "authentication": true,
+          "role_required": "admin",
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "users": [
+                  {
+                    "id": "string",
+                    "name": "string",
+                    "email": "string",
+                    "role": "string",
+                    "reputation": "number",
+                    "createdAt": "timestamp"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "ADMIN_003",
+          "method": "PUT",
+          "path": "/admin/users/:id/role",
+          "description": "Change user role",
+          "authentication": true,
+          "role_required": "admin",
+          "request": {
+            "params": {
+              "id": "string (required)"
+            },
+            "body": {
+              "role": "string (required, 'student', 'moderator', 'admin')"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "user": {
+                  "id": "string",
+                  "role": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "ADMIN_004",
+          "method": "PUT",
+          "path": "/admin/users/:id/ban",
+          "description": "Ban/Unban user",
+          "authentication": true,
+          "role_required": "admin",
+          "request": {
+            "params": {
+              "id": "string (required)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "message": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "BOOKMARKS": {
+      "description": "Bookmark management endpoints",
+      "endpoints": [
+        {
+          "id": "BOOKMARK_001",
+          "method": "GET",
+          "path": "/bookmarks",
+          "description": "Get all bookmarks for logged-in user",
+          "authentication": true,
+          "request": {
+            "query": {
+              "type": "string (optional, 'note', 'doubt', 'blog', 'all')",
+              "page": "number (optional, default: 1)",
+              "limit": "number (optional, default: 20)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": [
+                  {
+                    "_id": "string",
+                    "user": "string",
+                    "itemType": "string",
+                    "itemId": "string",
+                    "item": {
+                      "_id": "string",
+                      "title": "string",
+                      "author": {
+                        "_id": "string",
+                        "name": "string",
+                        "avatar": "string"
+                      },
+                      "tags": ["string"],
+                      "createdAt": "string"
+                    },
+                    "createdAt": "string"
+                  }
+                ],
+                "pagination": {
+                  "page": "number",
+                  "limit": "number",
+                  "total": "number",
+                  "pages": "number"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "BOOKMARK_002",
+          "method": "POST",
+          "path": "/bookmarks",
+          "description": "Add a bookmark",
+          "authentication": true,
+          "request": {
+            "body": {
+              "itemType": "string (required, 'note', 'doubt', 'blog')",
+              "itemId": "string (required, MongoDB ObjectId)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 201,
+              "body": {
+                "success": true,
+                "data": {
+                  "_id": "string",
+                  "user": "string",
+                  "itemType": "string",
+                  "itemId": "string",
+                  "createdAt": "string"
+                }
+              }
+            },
+            "error": {
+              "status": 400,
+              "body": {
+                "success": false,
+                "message": "Item already bookmarked"
+              }
+            }
+          }
+        },
+        {
+          "id": "BOOKMARK_003",
+          "method": "DELETE",
+          "path": "/bookmarks/:id",
+          "description": "Remove a bookmark",
+          "authentication": true,
+          "request": {
+            "params": {
+              "id": "string (required, bookmark ID)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "message": "Bookmark removed successfully"
+              }
+            }
+          }
+        },
+        {
+          "id": "BOOKMARK_004",
+          "method": "GET",
+          "path": "/bookmarks/check/:itemType/:itemId",
+          "description": "Check if item is bookmarked",
+          "authentication": true,
+          "request": {
+            "params": {
+              "itemType": "string (required, 'note', 'doubt', 'blog')",
+              "itemId": "string (required, MongoDB ObjectId)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "isBookmarked": "boolean",
+                "bookmarkId": "string or null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "LEADERBOARD": {
+      "description": "Leaderboard endpoints",
+      "endpoints": [
+        {
+          "id": "LEADERBOARD_001",
+          "method": "GET",
+          "path": "/leaderboard",
+          "description": "Get leaderboard with top users",
+          "authentication": true,
+          "request": {
+            "query": {
+              "period": "string (optional, 'all', 'month', 'week', default: 'all')",
+              "limit": "number (optional, default: 50)"
+            }
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": [
+                  {
+                    "_id": "string",
+                    "name": "string",
+                    "avatar": "string or null",
+                    "points": "number",
+                    "rank": "number",
+                    "stats": {
+                      "notesCount": "number",
+                      "doubtsAnswered": "number",
+                      "blogsCount": "number"
+                    }
+                  }
+                ],
+                "period": "string"
+              }
+            }
+          }
+        },
+        {
+          "id": "LEADERBOARD_002",
+          "method": "GET",
+          "path": "/leaderboard/me",
+          "description": "Get logged-in user's rank and points",
+          "authentication": true,
+          "request": {
+            "body": null
+          },
+          "response": {
+            "success": {
+              "status": 200,
+              "body": {
+                "success": true,
+                "data": {
+                  "rank": "number",
+                  "points": "number"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
